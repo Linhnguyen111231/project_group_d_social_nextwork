@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
+use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthController::class,'login']);
+Route::post('/register', [AuthController::class,'register']);
+Route::group(['middleware'=>['auth:sanctum']], function () {
+    Route::get('/', [AuthController::class,'posts']);
+    Route::post('/logout', [AuthController::class,'logout']);
+    Route::post('/message', [MessageController::class,'index']);
+    Route::post('/create-message', [MessageController::class,'create']);
 });
+
